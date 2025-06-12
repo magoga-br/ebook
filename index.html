@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-books</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .ebooks-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .ebook-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .ebook-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .ebook-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .ebook-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.8) 100%);
+        }
+
+        .ebook-content {
+            padding: 25px;
+        }
+
+        .ebook-content h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .ebook-content p {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border: none;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .form-container {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.4s ease;
+        }
+
+        .overlay.active .form-container {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #e74c3c;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-header h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: #7f8c8d;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e1e5e8;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .ebook-1 .ebook-image {
+            background: linear-gradient(45deg, #1abc9c, #16a085);
+        }
+
+        .ebook-2 .ebook-image {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+        }
+
+        .ebook-3 .ebook-image {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+
+        .ebook-image .icon {
+            position: absolute;
+            bottom: 20px;
+            left: 25px;
+            font-size: 3rem;
+            color: white;
+            z-index: 2;
+        }
+
+        .form-footer {
+            margin-top: 25px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #e1e5e8;
+            margin-top: 30px;
+        }
+
+        /* Responsividade */
+        @media (min-width: 768px) {
+            .ebooks-container {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .ebook-card {
+                width: calc(50% - 15px);
+            }
+        }
+
+        @media (min-width: 992px) {
+            .ebook-card {
+                width: calc(33.333% - 20px);
+            }
+
+            header h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>E-books para Gestão Empresarial</h1>
+            <p>Conhecimento estratégico para impulsionar o crescimento da sua empresa</p>
+        </header>
+
+        <div class="ebooks-container">
+            <!-- Ebook 1 - Gestão Financeira -->
+            <div class="ebook-card ebook-1">
+                <div class="ebook-image">
+                    <div class="icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                <div class="ebook-content">
+                    <h3>[Ebook] Personas</h3>
+                    <!-- <p>Aprenda a otimizar seus recursos financeiros, reduzir custos e maximizar os lucros da sua empresa
+                        com estratégias comprovadas.</p> -->
+                    <button class="btn download-btn" data-ebook="Gestão Financeira Eficiente" data-pdf="pdf1.pdf">Baixar
+                        E-book</button>
+                </div>
+            </div>
+
+            <!-- Ebook 2 - Liderança -->
+            <div class="ebook-card ebook-2">
+                <div class="ebook-image">
+                    <div class="icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="ebook-content">
+                    <h3>[Ebook] Prompt ChatGPT para RH</h3>
+                    <!-- <p>Desenvolva habilidades essenciais para liderar equipes produtivas e engajadas que impulsionam
+                        resultados extraordinários.</p> -->
+                    <button class="btn download-btn" data-ebook="Liderança de Alta Performance"
+                        data-pdf="pdf2.pdf">Baixar E-book</button>
+                </div>
+            </div>
+
+            <!-- Ebook 3 - Inovação -->
+            <div class="ebook-card ebook-3">
+                <div class="ebook-image">
+                    <div class="icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                </div>
+                <div class="ebook-content">
+                    <h3>[Ebook] Guia prático para diminuir o excesso de faltas</h3>
+                    <!-- <p>Descubra como implementar tecnologias disruptivas e criar uma cultura de inovação sustentável na
+                        sua organização.</p> -->
+                    <button class="btn download-btn" data-ebook="Inovação e Transformação Digital"
+                        data-pdf="pdf3.pdf">Baixar E-book</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay do Formulário -->
+        <div class="overlay" id="formOverlay">
+            <div class="form-container">
+                <button class="close-btn" id="closeForm">&times;</button>
+                <div class="form-header">
+                    <h2 id="ebookTitle">Baixe seu E-book</h2>
+                    <p>Preencha o formulário para liberar o download</p>
+                </div>
+
+                <form id="downloadForm">
+                    <div class="form-group">
+                        <label for="name">Nome Completo</label>
+                        <input type="text" id="name" required placeholder="Digite seu nome completo">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company">Nome da Empresa</label>
+                        <input type="text" id="company" required placeholder="Digite o nome da empresa">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="position">Cargo na Empresa</label>
+                        <input type="text" id="position" required placeholder="Digite seu cargo">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cnpj">CNPJ</label>
+                        <input type="text" id="cnpj" required placeholder="Digite o CNPJ da empresa" maxlength="18"
+                            oninput="formatCNPJ(this)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="employees">Total de Colaboradores</label>
+                        <select id="employees" required>
+                            <option value="">Selecione</option>
+                            <option value="1-10">1-10</option>
+                            <option value="11-50">11-50</option>
+                            <option value="51-200">51-200</option>
+                            <option value="201-500">201-500</option>
+                            <option value="501+">501+</option>
+                        </select>
+                    </div>
+
+                    <div class="form-footer">
+                        <button type="submit" class="btn">Liberar Download</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2023 Gestão Empresarial | Todos os direitos reservados</p>
+        </footer>
+    </div>
+
+    <script>
+        function formatCNPJ(input) {
+            // Remove tudo que não for número
+            let value = input.value.replace(/\D/g, '');
+
+            // Aplica a máscara do CNPJ: XX.XXX.XXX/XXXX-XX
+            if (value.length > 0) {
+                value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+            }
+            if (value.length > 5) {
+                value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+            }
+            if (value.length > 8) {
+                value = value.replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3/$4');
+            }
+            if (value.length > 12) {
+                value = value.replace(/^(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, '$1.$2.$3/$4-$5');
+            }
+
+            // Atualiza o valor do input
+            input.value = value;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const downloadBtns = document.querySelectorAll('.download-btn');
+            const formOverlay = document.getElementById('formOverlay');
+            const closeForm = document.getElementById('closeForm');
+            const ebookTitle = document.getElementById('ebookTitle');
+            const downloadForm = document.getElementById('downloadForm');
+            let currentEbook = '';
+            let currentPdf = '';
+
+            // Abrir o overlay ao clicar em um botão de download
+            downloadBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    currentEbook = this.getAttribute('data-ebook');
+                    currentPdf = this.getAttribute('data-pdf');
+                    ebookTitle.textContent = `Baixe: ${currentEbook}`;
+                    formOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            // Fechar o overlay
+            closeForm.addEventListener('click', function () {
+                formOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+
+            // Fechar ao clicar fora do formulário
+            formOverlay.addEventListener('click', function (e) {
+                if (e.target === formOverlay) {
+                    formOverlay.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            // Envio do formulário
+            downloadForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Coletar dados do formulário
+                const formData = {
+                    name: document.getElementById('name').value,
+                    company: document.getElementById('company').value,
+                    position: document.getElementById('position').value,
+                    cnpj: document.getElementById('cnpj').value,
+                    employees: document.getElementById('employees').value,
+                    ebook: currentEbook,
+                    _subject: `Novo download de e-book: ${currentEbook}`,
+                    _replyto: 'noreply@example.com',
+                    _template: 'table'
+                };
+
+                // Configuração do FormSubmit
+                const formAction = 'https://formsubmit.co/ajax/meri.alvesgf@gmail.com';
+
+                // Enviar dados para o FormSubmit
+                fetch(formAction, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Criar um link de download temporário
+                            const downloadLink = document.createElement('a');
+                            // Verifique se os PDFs estão na mesma pasta ou ajuste o caminho conforme necessário
+                            downloadLink.href = currentPdf; // ou './' + currentPdf se estiver na mesma pasta
+                            downloadLink.download = `${currentEbook.replace(/\s+/g, '_')}.pdf`;
+                            downloadLink.target = '_blank'; // Abre em nova aba
+
+                            // Simular clique no link para iniciar o download
+                            document.body.appendChild(downloadLink);
+                            downloadLink.click();
+                            document.body.removeChild(downloadLink);
+
+                            // Mostrar mensagem de sucesso
+                            alert(`Obrigado! O download do e-book "${currentEbook}" começará automaticamente. Entraremos em contato por email`);
+                        } else {
+                            throw new Error('Erro ao enviar formulário');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        alert('Ocorreu um erro ao enviar seus dados. Por favor, tente novamente.');
+                    })
+                    .finally(() => {
+                        // Fechar o overlay
+                        formOverlay.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+
+                        // Limpar o formulário
+                        downloadForm.reset();
+                    });
+            });
+        });
+    </script>
+</body>
+
+</html>
